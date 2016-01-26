@@ -3,10 +3,29 @@
 {% block content %}
     <div>
         {% for product in products %}
-            <p>Product: {{ product.name }}</p>
-            <p>Description: {{ product.description }}</p>
-            <p>Price: {{ product.price }}</p>
-            <hr>
+            <div>
+                <a href="{% url 'single_product' product.slug %}"><p>Product: {{ product.name }}</p></a>
+                <p>Description: {{ product.description }}</p>
+                <p>Price: {{ product.price }}</p>
+                <hr>
+            </div>
         {% endfor %}
     </div>
+    {% if products %}
+        {% if is_paginated %}
+            <div class="pagination">
+                <span class="page-links">
+                    {% if page_obj.has_previous %}
+                        <a href="/products?page={{ page_obj.previous_page_number }}">previous</a>
+                    {% endif %}
+                    <span class="page-current">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                    </span>
+                    {% if page_obj.has_next %}
+                        <a href="/products?page={{ page_obj.next_page_number }}">next</a>
+                    {% endif %}
+                </span>
+            </div>
+        {% endif %}
+    {% endif %}
 {% endblock %}
