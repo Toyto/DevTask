@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-# Create your models here.
 
 class Product(models.Model):
     name = models.CharField(max_length=50, blank=False)
@@ -23,4 +22,9 @@ class Product(models.Model):
         """
         return self.likes.count()
 
+
+class Comment(models.Model):
+    product = models.ForeignKey(Product)
+    text = models.TextField()
+    posted_at = models.DateTimeField(auto_now_add=True)
 

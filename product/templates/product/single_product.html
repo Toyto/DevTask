@@ -9,7 +9,24 @@
         <p>Likes: {{ total_likes }}</p>
     </div>
     <input type="button" id="like" data-content="{{ single_product.slug }}" value="Like" />
-
+    <div>
+      <h3>Comments: </h3>
+      <ul>
+        {% for comment in comments %}
+          <li>
+            <p>Posted datetime: {{ comment.posted_at }}</p>
+            {{ comment.text }}
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+    <form method="POST" action="."> 
+      {% csrf_token %}
+      {{form.as_p}}
+      <input type="submit" name="submit" />
+      <input type="text" name="product_slug" value="{{ single_product.slug }}" style="display:none">
+    </form>
+    
 {% endblock %}
 {% block scripts %}
     <script>

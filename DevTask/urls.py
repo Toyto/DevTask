@@ -4,7 +4,7 @@ from django.views.generic.edit import CreateView
 from django.contrib.auth.forms import UserCreationForm
 from django.views.generic import RedirectView
 
-from product.views import ProductsView, SingleProductView
+from product.views import ProductsView, SingleProductView, IndexView
 
 
 urlpatterns = patterns('',
@@ -13,13 +13,14 @@ urlpatterns = patterns('',
     # url(r'^blog/', include('blog.urls')),
 
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^$', IndexView.as_view(), name='index'),
     url(r'^products/$', ProductsView.as_view(), name='products'),
     url(r'^products/(?P<slug>[\w-]+)/$', SingleProductView.as_view(), name='single_product'),
-    url(r'^$', CreateView.as_view(
+    url(r'^registration$', CreateView.as_view(
             template_name='registration/register.html',
             form_class=UserCreationForm,
             success_url='/products'
-    )),
+    ), name='registration'),
     url(r'^logout/$',
         'django.contrib.auth.views.logout', name='logout'),
     url(r'^login/$', 'django.contrib.auth.views.login', name='login'),
