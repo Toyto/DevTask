@@ -6,5 +6,28 @@
         <p>Name: {{ single_product.name }}</p>
         <p>Description: {{ single_product.description }}</p>
         <p>Price: {{ single_product.price }}</p>
+        <p>Likes: {{ total_likes }}</p>
     </div>
+    <input type="button" id="like" data-content="{{ single_product.slug }}" value="Like" />
+
+{% endblock %}
+{% block scripts %}
+    <script>
+        $('#like').click(function(){
+              $.ajax({
+                       type: "POST",
+                       url: "{% url 'like' %}",
+                       data: {'slug': $(this).attr('data-content'), 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                       dataType: "json",
+                       success: function(response) {
+                              alert(response.message);
+                              alert('Product likes count is now ' + response.likes_count);
+                              location.reload();
+                        },
+                        error: function(rs, e) {
+                               alert(rs.responseText);
+                        }
+                  }); 
+            })
+    </script>
 {% endblock %}

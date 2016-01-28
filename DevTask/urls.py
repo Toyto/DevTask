@@ -24,4 +24,5 @@ urlpatterns = patterns('',
         'django.contrib.auth.views.logout', name='logout'),
     url(r'^login/$', 'django.contrib.auth.views.login', name='login'),
     url(r'^accounts/profile/$', RedirectView.as_view(url='/products')),
+    url(r'^like/$', 'product.views.like', name='like'),
 )
