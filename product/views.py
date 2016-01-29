@@ -3,10 +3,11 @@ import datetime
 
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import TemplateView, ListView, FormView
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
+from django.contrib import messages
 
 from .models import Product, Comment
 from .forms import CommentForm
@@ -21,6 +22,10 @@ class ProductsView(ListView):
     template_name = 'product/products.html'
     paginate_by = 2
     context_object_name = 'products'
+
+    def get_queryset(self):
+        queryset = sorted(Product.objects.all(), key=lambda x: x.total_likes, reverse=True)
+        return queryset
 
 
 class SingleProductView(FormView):
@@ -43,7 +48,11 @@ class SingleProductView(FormView):
             slug = request.POST.get('product_slug')
             product = Product.objects.get(slug=slug)
             Comment.objects.create(product=product, text=text)
+            messages.success(request, 'Thank for comment.')
             return redirect('single_product', slug)
+        else:
+            return HttpResponseBadRequest()
+
 
 @login_required
 @require_POST
@@ -52,13 +61,12 @@ def like(request):
         user = request.user
         slug = request.POST.get('slug', None)
         product = get_object_or_404(Product, slug=slug)
-
         if product.likes.filter(id=user.id).exists():
             product.likes.remove(user)
-            message = 'You disliked this'
+            messages.success(request, 'You disliked it.')
         else:
             product.likes.add(user)
-            message = 'You liked this'
+            messages.success(request, 'You liked it.')
 
-    context = {'likes_count': product.total_likes, 'message': message}
+    context = {'likes_count': product.total_likes}
     return HttpResponse(json.dumps(context), content_type='application/json')

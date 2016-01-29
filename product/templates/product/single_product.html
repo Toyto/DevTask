@@ -26,8 +26,15 @@
       <input type="submit" name="submit" />
       <input type="text" name="product_slug" value="{{ single_product.slug }}" style="display:none">
     </form>
-    
+    {% if messages %}
+      <ul class="messages">
+          {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+          {% endfor %}
+      </ul>
+    {% endif %}
 {% endblock %}
+
 {% block scripts %}
     <script>
         $('#like').click(function(){
@@ -37,7 +44,6 @@
                        data: {'slug': $(this).attr('data-content'), 'csrfmiddlewaretoken': '{{ csrf_token }}'},
                        dataType: "json",
                        success: function(response) {
-                              alert(response.message);
                               alert('Product likes count is now ' + response.likes_count);
                               location.reload();
                         },

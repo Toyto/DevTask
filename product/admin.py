@@ -5,6 +5,7 @@ from .models import Product, Comment
 
 class ProductAdmin(admin.ModelAdmin):
     list_display = ['name', 'price', 'description', 'modified_at']
+    list_filter = ('likes',)
 
 
 class CommentAdmin(admin.ModelAdmin):
