@@ -23,7 +23,9 @@ class ProductsView(ListView):
     context_object_name = 'products'
 
     def get_queryset(self):
-        queryset = sorted(Product.objects.all(), key=lambda x: x.total_likes, reverse=True)
+        queryset = sorted(Product.objects.all(),
+                          key=lambda x: x.total_likes,
+                          reverse=True)
         return queryset
 
 
